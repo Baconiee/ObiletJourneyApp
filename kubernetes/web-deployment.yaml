@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: obilet-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: obilet-web
+  template:
+    metadata:
+      labels:
+        app: obilet-web
+    spec:
+      containers:
+        - name: obilet-web
+          image: berkaygulerr/obiletjourneyapp-web:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Development"
+            - name: ObiletApiKey
+              value: "Basic JEcYcEMyantZV085WVc3G2JtVjNZbWx1"

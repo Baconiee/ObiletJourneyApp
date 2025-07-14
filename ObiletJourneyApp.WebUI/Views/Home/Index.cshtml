@@ -1,0 +1,171 @@
+﻿@model ObiletJourneyApp.WebUI.Models.ViewModels.LocationSelectionViewModel
+
+@{
+    ViewData["Title"] = "Bus Ticket Search";
+}
+
+<!-- Vertical Layout with visible border and rounded corners -->
+<form method="post" asp-controller="Home" asp-action="SearchBusJourneys" id="searchForm">
+    <div class="px-4 py-3 mt-5 mx-auto border rounded" style="max-width: 500px; border-width: 2px; border-color: #ccc; border-radius: 12px;">
+        <!-- Nereden -->
+        <div class="mb-3">
+            <label for="OriginId" class="form-label">Nereden</label>
+            <div class="d-flex gap-2">
+                <select name="originId" id="OriginId" class="form-control">
+                    <option value="">Bir şehir seçin</option>
+                    @foreach (var location in Model.Locations)
+                    {
+                        <option value="@location.Id">@location.Name</option>
+                    }
+                </select>
+                <input id="originSearchInput" type="text" class="form-control" placeholder="Ara..." style="max-width: 120px;" />
+                <button id="originSearchBtn" type="button" class="btn btn-outline-secondary">🔍</button>
+            </div>
+        </div>
+
+        <!-- Swap Button (Centered) -->
+        <div class="d-flex justify-content-center mb-3">
+            <button type="button" class="btn btn-light" onclick="swapLocations()">⇅</button>
+        </div>
+
+        <!-- Nereye -->
+        <div class="mb-3">
+            <label for="DestinationId" class="form-label">Nereye</label>
+            <div class="d-flex gap-2">
+                <select name="destinationId" id="DestinationId" class="form-control">
+                    <option value="">Bir şehir seçin</option>
+                    @foreach (var location in Model.Locations)
+                    {
+                        <option value="@location.Id">@location.Name</option>
+                    }
+                </select>
+                <input id="destinationSearchInput" type="text" class="form-control" placeholder="Ara..." style="max-width: 120px;" />
+                <button id="destinationSearchBtn" type="button" class="btn btn-outline-secondary">🔍</button>
+            </div>
+        </div>
+
+        <!-- Tarih and Buttons -->
+        <div class="mb-3">
+            <label for="JourneyDate" class="form-label">Tarih</label>
+            <div class="d-flex gap-2 mb-2">
+                <input name="departureDate" type="date" id="JourneyDate" class="form-control" min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+            </div>
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-outline-secondary flex-fill" onclick="setToday()">Bugün</button>
+                <button type="button" class="btn btn-outline-secondary flex-fill" onclick="setTomorrow()">Yarın</button>
+            </div>
+        </div>
+
+        <!-- Bileti Bul Button -->
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary px-5">Bileti Bul</button>
+        </div>
+    </div>
+</form>
+
+<!-- Swap, Today, Tomorrow Functions and Form Validation -->
+<script>
+    async function fetchFilteredLocations(searchTerm) {
+        try {
+            const response = await fetch('/Home/SearchBusLocations', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ search: searchTerm })
+            });
+
+            const data = await response.json();
+            console.log("Search result:", data);
+            return data;
+        } catch (error) {
+            console.error("Error fetching locations:", error);
+            return [];
+        }
+    }
+
+    function updateDropdownOptions(dropdownId, locations) {
+        const dropdown = document.getElementById(dropdownId);
+        dropdown.innerHTML = '<option value="">Bir şehir seçin</option>';
+        locations.forEach(loc => {
+            const opt = document.createElement('option');
+            opt.value = loc.id;
+            opt.textContent = loc.name;
+            dropdown.appendChild(opt);
+        });
+    }
+
+    function setToday() {
+        const today = new Date('2025-07-14');
+        const formattedDate = today.toISOString().split('T')[0]; // Formats as YYYY-MM-DD
+        document.getElementById('JourneyDate').value = formattedDate;
+    }
+
+    function setTomorrow() {
+        const tomorrow = new Date('2025-07-15');
+        const formattedDate = tomorrow.toISOString().split('T')[0]; // Formats as YYYY-MM-DD
+        document.getElementById('JourneyDate').value = formattedDate;
+    }
+
+    function swapLocations() {
+        const originDropdown = document.getElementById('OriginId');
+        const destinationDropdown = document.getElementById('DestinationId');
+        const tempValue = originDropdown.value;
+        originDropdown.value = destinationDropdown.value;
+        destinationDropdown.value = tempValue;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // Set date to tomorrow on page load
+        const savedOriginId = localStorage.getItem('lastOriginId');
+        const savedDestinationId = localStorage.getItem('lastDestinationId');
+        const savedDepartureDate = localStorage.getItem('lastDepartureDate');
+
+        if (savedOriginId) {
+            document.getElementById('OriginId').value = savedOriginId;
+        }
+        if (savedDestinationId) {
+            document.getElementById('DestinationId').value = savedDestinationId;
+        }
+        if (savedDepartureDate) {
+            document.getElementById('JourneyDate').value = savedDepartureDate;
+        } else {
+            // Only default to tomorrow if not saved
+            setTomorrow();
+        }
+
+        // Origin search button
+        document.getElementById('originSearchBtn').addEventListener('click', async () => {
+            const term = document.getElementById('originSearchInput').value.trim();
+            if (!term) return;
+            const locations = await fetchFilteredLocations(term);
+            updateDropdownOptions('OriginId', locations);
+        });
+
+        // Destination search button
+        document.getElementById('destinationSearchBtn').addEventListener('click', async () => {
+            const term = document.getElementById('destinationSearchInput').value.trim();
+            if (!term) return;
+            const locations = await fetchFilteredLocations(term);
+            updateDropdownOptions('DestinationId', locations);
+        });
+
+        // Form validation on submit
+        document.getElementById('searchForm').addEventListener('submit', (event) => {
+            const originId = document.getElementById('OriginId').value;
+            const destinationId = document.getElementById('DestinationId').value;
+            const departureDate = document.getElementById('JourneyDate').value;
+
+            if (originId && destinationId && originId === destinationId) {
+                event.preventDefault();
+                alert('Origin and destination cannot be the same.');
+                return;
+            }
+
+            // ✅ Save values to localStorage
+            localStorage.setItem('lastOriginId', originId);
+            localStorage.setItem('lastDestinationId', destinationId);
+            localStorage.setItem('lastDepartureDate', departureDate);
+        });
+    });
+</script>
