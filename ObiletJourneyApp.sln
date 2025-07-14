@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObiletJourneyApp.Domain", "ObiletJourneyApp.Domain\ObiletJourneyApp.Domain.csproj", "{318F63E1-DEA6-4CD0-B6B1-E0F70D69FEBD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObiletJourneyApp.Domain", "src\ObiletJourneyApp.Domain\ObiletJourneyApp.Domain.csproj", "{318F63E1-DEA6-4CD0-B6B1-E0F70D69FEBD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObiletJourneyApp.Application", "ObiletJourneyApp.Application\ObiletJourneyApp.Application.csproj", "{8215CAC2-D585-44D4-AF0E-442B8C78ED29}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObiletJourneyApp.Application", "src\ObiletJourneyApp.Application\ObiletJourneyApp.Application.csproj", "{8215CAC2-D585-44D4-AF0E-442B8C78ED29}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObiletJourneyApp.Infrastructure", "ObiletJourneyApp.Infrastructure\ObiletJourneyApp.Infrastructure.csproj", "{DBC65F42-331D-447E-B694-427809104832}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObiletJourneyApp.Infrastructure", "src\ObiletJourneyApp.Infrastructure\ObiletJourneyApp.Infrastructure.csproj", "{DBC65F42-331D-447E-B694-427809104832}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObiletJourneyApp.WebUI", "ObiletJourneyApp.WebUI\ObiletJourneyApp.WebUI.csproj", "{109F4128-9FD5-4177-A395-8B2DD84F648F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObiletJourneyApp.WebUI", "src\ObiletJourneyApp.WebUI\ObiletJourneyApp.WebUI.csproj", "{109F4128-9FD5-4177-A395-8B2DD84F648F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObiletJourneyApp.CompositionRoot", "ObiletJourneyApp.CompositionRoot\ObiletJourneyApp.CompositionRoot.csproj", "{109842A2-C1C9-46F0-90EB-1A94776F36CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObiletJourneyApp.CompositionRoot", "src\ObiletJourneyApp.CompositionRoot\ObiletJourneyApp.CompositionRoot.csproj", "{109842A2-C1C9-46F0-90EB-1A94776F36CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
